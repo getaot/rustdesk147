@@ -117,8 +117,8 @@ const CHARS: &[char] = &[
     'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
 
-pub const RENDEZVOUS_SERVERS: &[&str] = &["nextcloud.francessco.top"];
-pub const RS_PUB_KEY: &str = "5j02rS+gq4jtBWynFr95aAXjcBOqS8Onj5LLaaxvhQ8=";
+pub const RENDEZVOUS_SERVERS: &[&str] = &["8.137.164.120"];
+pub const RS_PUB_KEY: &str = "z8tbKp8ZjCqGfEjPdJGRETVGXhTKAUDADOequOqBq90=";
 
 pub const RENDEZVOUS_PORT: i32 = 21116;
 pub const RELAY_PORT: i32 = 21117;
