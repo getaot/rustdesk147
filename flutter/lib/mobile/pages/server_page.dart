@@ -510,63 +510,85 @@ class ServerInfo extends StatelessWidget {
     final showOneTime = serverModel.approveMode != 'click' &&
         serverModel.verificationMethod != kUsePermanentPassword;
     return PaddingCard(
-        title: translate('Your Device'),
-        child: Column(
-          // ID
-          children: [
-            Row(children: [
-              const Icon(Icons.perm_identity,
-                      color: Colors.grey, size: iconSize)
-                  .marginOnly(right: iconMarginRight),
-              Text(
-                translate('ID'),
-                style: textStyleHeading,
-              )
-            ]),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                model.serverId.value.text,
+    title: translate('Your Device'),
+    child: Column(
+      // ID
+      children: [
+        Row(children: [
+          const Icon(Icons.perm_identity,
+                  color: Colors.grey, size: iconSize)
+              .marginOnly(right: iconMarginRight),
+          Text(
+            translate('ID'),
+            style: textStyleHeading,
+          )
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(
+            model.serverId.value.text,
+            style: textStyleValue,
+          ),
+          IconButton(
+              visualDensity: VisualDensity.compact,
+              icon: Icon(Icons.copy_outlined),
+              onPressed: () {
+                copyToClipboard(model.serverId.value.text.trim());
+              })
+        ]).marginOnly(left: 39, bottom: 10),
+        // Password
+        Row(children: [
+          const Icon(Icons.lock_outline, color: Colors.grey, size: iconSize)
+              .marginOnly(right: iconMarginRight),
+          Text(
+            translate('One-time Password'),
+            style: textStyleHeading,
+          )
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Text(
+            !showOneTime ? '-' : model.serverPasswd.value.text,
+            style: textStyleValue,
+          ),
+          !showOneTime
+              ? SizedBox.shrink()
+              : Row(children: [
+                  IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(Icons.refresh),
+                      onPressed: () => bind.mainUpdateTemporaryPassword()),
+                  IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(Icons.copy_outlined),
+                      onPressed: () {
+                        copyToClipboard(
+                            model.serverPasswd.value.text.trim());
+                      })
+                ])
+        ]).marginOnly(left: 40, bottom: 15),
+        // ==========新增版本号 start ==========
+        // Version
+        Row(children: [
+          const Icon(Icons.info_outline, color: Colors.grey, size: iconSize)
+              .marginOnly(right: iconMarginRight),
+          Text(
+            "version",
+            style: textStyleHeading,
+          )
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          FutureBuilder<String>(
+            future: bind.mainGetVersion(),
+            builder: (context, snapshot) {
+              return Text(
+                snapshot.data ?? "-",
                 style: textStyleValue,
-              ),
-              IconButton(
-                  visualDensity: VisualDensity.compact,
-                  icon: Icon(Icons.copy_outlined),
-                  onPressed: () {
-                    copyToClipboard(model.serverId.value.text.trim());
-                  })
-            ]).marginOnly(left: 39, bottom: 10),
-            // Password
-            Row(children: [
-              const Icon(Icons.lock_outline, color: Colors.grey, size: iconSize)
-                  .marginOnly(right: iconMarginRight),
-              Text(
-                translate('One-time Password'),
-                style: textStyleHeading,
-              )
-            ]),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(
-                !showOneTime ? '-' : model.serverPasswd.value.text,
-                style: textStyleValue,
-              ),
-              !showOneTime
-                  ? SizedBox.shrink()
-                  : Row(children: [
-                      IconButton(
-                          visualDensity: VisualDensity.compact,
-                          icon: const Icon(Icons.refresh),
-                          onPressed: () => bind.mainUpdateTemporaryPassword()),
-                      IconButton(
-                          visualDensity: VisualDensity.compact,
-                          icon: Icon(Icons.copy_outlined),
-                          onPressed: () {
-                            copyToClipboard(
-                                model.serverPasswd.value.text.trim());
-                          })
-                    ])
-            ]).marginOnly(left: 40, bottom: 15),
-            ConnectionStateNotification()
-          ],
+              );
+            },
+          ),
+          SizedBox.shrink()
+        ]).marginOnly(left: 39, bottom: 15),
+        ConnectionStateNotification()
+        ],
         ));
   }
 }
