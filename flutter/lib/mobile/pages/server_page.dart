@@ -225,12 +225,6 @@ class _ServerPageState extends State<ServerPage> {
 
 void checkService() async {
   gFFI.invokeMethod("check_service");
-  // for Android 10/11, request MANAGE_EXTERNAL_STORAGE permission from system setting page
-  if (AndroidPermissionManager.isWaitingFile() && !gFFI.serverModel.fileOk) {
-    AndroidPermissionManager.complete(kManageExternalStorage,
-        await AndroidPermissionManager.check(kManageExternalStorage));
-    debugPrint("file permission finished");
-  }
 }
 
 class ServiceNotRunningNotification extends StatelessWidget {
@@ -253,15 +247,18 @@ class ServiceNotRunningNotification extends StatelessWidget {
                 .marginOnly(bottom: 8),
             ElevatedButton.icon(
                 icon: const Icon(Icons.play_arrow),
-                onPressed: () {
-                  if (gFFI.userModel.userName.value.isEmpty &&
-                      bind.mainGetLocalOption(key: "show-scam-warning") !=
-                          "N") {
-                    showScamWarning(context, serverModel);
-                  } else {
-                    serverModel.toggleService();
-                  }
-                },
+                // onPressed: () {
+                //   if (gFFI.userModel.userName.value.isEmpty &&
+                //       bind.mainGetLocalOption(key: "show-scam-warning") !=
+                //           "N") {
+                //     showScamWarning(context, serverModel);
+                //   } else {
+                //     serverModel.toggleService();
+                //   }
+                // },
+              onPressed: () {
+                serverModel.toggleService();
+              },
                 label: Text(translate("Start service")))
           ],
         ));
@@ -509,7 +506,7 @@ class ServerInfo extends StatelessWidget {
 
     final showOneTime = serverModel.approveMode != 'click' &&
         serverModel.verificationMethod != kUsePermanentPassword;
-    return PaddingCard(
+   return PaddingCard(
     title: translate('Your Device'),
     child: Column(
       // ID
@@ -587,9 +584,11 @@ class ServerInfo extends StatelessWidget {
           ),
           SizedBox.shrink()
         ]).marginOnly(left: 39, bottom: 15),
+
+        // ==========新增版本号 end ==========
         ConnectionStateNotification()
-        ],
-        ));
+      ],
+    ));
   }
 }
 
@@ -631,12 +630,15 @@ class _PermissionCheckerState extends State<PermissionChecker> {
           if (!hideStopService || !serverModel.mediaOk)
             PermissionRow(
                 translate("Screen Capture"),
-                serverModel.mediaOk,
-                !serverModel.mediaOk &&
-                        gFFI.userModel.userName.value.isEmpty &&
-                        bind.mainGetLocalOption(key: "show-scam-warning") != "N"
-                    ? () => showScamWarning(context, serverModel)
-                    : serverModel.toggleService),
+                // serverModel.mediaOk,
+                // !serverModel.mediaOk &&
+                //         gFFI.userModel.userName.value.isEmpty &&
+                //         bind.mainGetLocalOption(key: "show-scam-warning") != "N"
+                //     ? () => showScamWarning(context, serverModel)
+                //     : serverModel.toggleService),
+                 serverModel.mediaOk,
+                serverModel.toggleService,
+              ),
           PermissionRow(
             translate("Input Control"),
             serverModel.inputOk,
